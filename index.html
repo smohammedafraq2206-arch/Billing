@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Billing App">
+    <meta name="description" content="Professional billing system for dress shop">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='192' height='192' fill='url(%23grad)'/%3E%3Ctext x='96' y='120' font-size='80' text-anchor='middle' fill='white'%3E👗%3C/text%3E%3C/svg%3E">
+    <title>Dress Shop - Billing System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            background: #f8f9fa;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+            font-weight: bold;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 5px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        input, select, textarea {
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .product-entry {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .product-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+            margin-bottom: 10px;
+        }
+
+        .add-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+            font-size: 1rem;
+        }
+
+        .add-btn:hover {
+            background: #218838;
+        }
+
+        .bill-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .bill-table th {
+            background: #667eea;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .bill-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .bill-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+        }
+
+        .totals {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .total-row.grand-total {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #667eea;
+            border-top: 3px solid #667eea;
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .action-btn {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .print-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .whatsapp-btn {
+            background: #25D366;
+            color: white;
+        }
+
+        .clear-btn {
+            background: #6c757d;
+            color: white;
+        }
+
+        .save-btn {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .product-list {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .product-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .product-item input {
+            margin-bottom: 0;
+        }
+
+        .remove-product-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .remove-product-btn:hover {
+            background: #c82333;
+        }
+
+        .print-bill {
+            display: none;
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+        }
+
+        .print-header {
+            text-align: center;
+            border-bottom: 3px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .print-header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .print-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .print-section {
+            padding: 10px;
+        }
+
+        .print-section h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+            }
+            .tabs, .tab-content, .header, .action-buttons {
+                display: none !important;
+            }
+            .print-bill {
+                display: block !important;
+            }
+        }
+
+        .empty-message {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .info-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-box strong {
+            color: #856404;
+        }
+
+        @media (max-width: 768px) {
+            .product-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-item {
+                grid-template-columns: 1fr;
+            }
+            
+            .bill-table {
+                font-size: 0.9rem;
+            }
+            
+            .bill-table th, .bill-table td {
+                padding: 8px 5px;
+            }
+
+            .tabs {
+                flex-direction: column;
+            }
+        }
+
+        .save-settings-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .save-settings-btn:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>👗 Dress Shop Billing System</h1>
+            <p>Professional Billing Made Easy</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('billing')">📝 Create Bill</button>
+            <button class="tab" onclick="switchTab('products')">🛍️ Manage Products</button>
+            <button class="tab" onclick="switchTab('settings')">⚙️ Shop Settings</button>
+        </div>
+
+        <!-- Billing Tab -->
+        <div id="billing" class="tab-content active">
+            <div class="section">
+                <div class="section-title">📋 Bill Details</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Bill No.</label>
+                        <input type="text" id="billNumber" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="text" id="billDate" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Time</label>
+                        <input type="text" id="billTime" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">👤 Customer Details</div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Customer Name *</label>
+                        <input type="text" id="customerName" placeholder="Enter customer name">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number *</label>
+                        <input type="tel" id="customerPhone" placeholder="+91 98765 43210">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea id="customerAddress" placeholder="Enter customer address (optional)"></textarea>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🛍️ Add Items to Bill</div>
+                <div class="product-entry">
+                    <div class="product-form">
+                        <div class="form-group">
+                            <label>Select Product</label>
+                            <select id="productSelect">
+                                <option value="">-- Select Product --</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" id="productQty" min="1" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label>Price (₹)</label>
+                            <input type="number" id="productPrice" step="0.01" min="0" placeholder="0.00" readonly>
+                        </div>
+                        <button class="add-btn" onclick="addProduct()">➕ Add</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📄 Bill Items</div>
+                <div id="billTableContainer">
+                    <div class="empty-message">No items added yet. Add products above to start billing.</div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="action-btn print-btn" onclick="printBill()">🖨️ Print Bill</button>
+                <button class="action-btn whatsapp-btn" onclick="sendWhatsApp()">💬 Send WhatsApp</button>
+                <button class="action-btn save-btn" onclick="saveBill()">💾 Save Bill</button>
+                <button class="action-btn clear-btn" onclick="clearAll()">🗑️ New Bill</button>
+            </div>
+        </div>
+
+        <!-- Products Management Tab -->
+        <div id="products" class="tab-content">
+            <div class="section">
+                <div class="section-title">🛍️ Your Products</div>
+                <div class="info-box">
+                    <strong>💡 Tip:</strong> Add all your dress products here with names and prices in Rupees (₹). They will appear in the dropdown when creating bills!
+                </div>
+                
+                <div id="productListContainer"></div>
+
+                <div class="product-entry">
+                    <h3 style="margin-bottom: 15px;">➕ Add New Product</h3>
+                    <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 10px; align-items: end;">
+                        <div class="form-group">
+                            <label>Product Name</label>
+                            <input type="text" id="newProductName" placeholder="e.g., Summer Floral Dress">
+                        </div>
+                        <div class="form-group">
+                            <label>Price (₹)</label>
+                            <input type="number" id="newProductPrice" step="0.01" min="0" placeholder="0.00">
+                        </div>
+                        <button class="add-btn" onclick="addNewProduct()">➕ Add Product</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings" class="tab-content">
+            <div class="section">
+                <div class="section-title">⚙️ Shop Settings</div>
+                <div class="info-box">
+                    <strong>ℹ️ Note:</strong> These settings will be saved in your browser and appear on all bills.
+                </div>
+                
+                <div class="form-group">
+                    <label>Shop Name *</label>
+                    <input type="text" id="shopNameSetting" placeholder="Enter your shop name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Shop Address</label>
+                    <textarea id="shopAddressSetting" placeholder="Enter your shop address"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" id="shopPhoneSetting" placeholder="+91 98765 43210">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="shopEmailSetting" placeholder="info@yourshop.com">
+                    </div>
+                </div>
+
+                <button class="save-settings-btn" onclick="saveSettings()">💾 Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Print Version -->
+    <div class="print-bill" id="printBill">
+        <div class="print-header">
+            <h1 id="printShopName">Dress Shop</h1>
+            <p id="printShopDetails"></p>
+        </div>
+
+        <div class="print-info">
+            <div class="print-section">
+                <h3>Bill To:</h3>
+                <p><strong id="printCustomerName">-</strong></p>
+                <p id="printCustomerPhone">-</p>
+                <p id="printCustomerAddress">-</p>
+            </div>
+            <div class="print-section" style="text-align: right;">
+                <h3>Bill Details:</h3>
+                <p><strong>Bill No:</strong> <span id="printBillNo">-</span></p>
+                <p><strong>Date:</strong> <span id="printDate">-</span></p>
+                <p><strong>Time:</strong> <span id="printTime">-</span></p>
+            </div>
+        </div>
+
+        <table class="bill-table" id="printTable">
+            <thead>
+                <tr>
+                    <th>S.No</th>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price (₹)</th>
+                    <th>Total (₹)</th>
+                </tr>
+            </thead>
+            <tbody id="printTableBody">
+            </tbody>
+        </table>
+
+        <div class="totals" id="printTotals">
+        </div>
+
+        <div style="margin-top: 40px; padding-top: 20px; border-top: 2px solid #333; text-align: center;">
+            <p><strong>Thank you for your business! 🙏</strong></p>
+            <p style="margin-top: 10px;">Visit again soon!</p>
+        </div>
+    </div>
+
+    <script>
+        let billItems = [];
+        let products = [];
+        let shopSettings = {};
+
+        window.onload = function() {
+            loadSettings();
+            loadProducts();
+            updateDateTime();
+            updateProductDropdown();
+            setInterval(updateDateTime, 1000);
+        };
+
+        function updateDateTime() {
+            const now = new Date();
+            
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            document.getElementById('billDate').value = `${day}-${month}-${year}`;
+            
+            let hours = now.getHours();
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+            document.getElementById('billTime').value = `${String(hours).padStart(2, '0')}:${minutes}:${seconds} ${ampm}`;
+            
+            document.getElementById('billNumber').value = 'BILL-' + now.getTime();
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function saveSettings() {
+            shopSettings = {
+                name: document.getElementById('shopNameSetting').value || 'Dress Shop',
+                address: document.getElementById('shopAddressSetting').value || '',
+                phone: document.getElementById('shopPhoneSetting').value || '',
+                email: document.getElementById('shopEmailSetting').value || ''
+            };
+            
+            localStorage.setItem('shopSettings', JSON.stringify(shopSettings));
+            alert('✅ Shop settings saved successfully!');
+        }
+
+        function loadSettings() {
+            const saved = localStorage.getItem('shopSettings');
+            if (saved) {
+                shopSettings = JSON.parse(saved);
+                document.getElementById('shopNameSetting').value = shopSettings.name || '';
+                document.getElementById('shopAddressSetting').value = shopSettings.address || '';
+                document.getElementById('shopPhoneSetting').value = shopSettings.phone || '';
+                document.getElementById('shopEmailSetting').value = shopSettings.email || '';
+            } else {
+                shopSettings = {
+                    name: 'Dress Shop',
+                    address: '',
+                    phone: '',
+                    email: ''
+                };
+            }
+        }
+
+        function loadProducts() {
+            const saved = localStorage.getItem('products');
+            if (saved) {
+                products = JSON.parse(saved);
+            } else {
+                products = [];
+            }
+            displayProducts();
+            updateProductDropdown();
+        }
+
+        function saveProducts() {
+            localStorage.setItem('products', JSON.stringify(products));
+        }
+
+        function displayProducts() {
+            const container = document.getElementById('productListContainer');
+            
+            if (products.length === 0) {
+                container.innerHTML = '<div class="empty-message">No products added yet. Add your first product below!</div>';
+                return;
+            }
+
+            let html = '<div class="product-list">';
+            products.forEach((product, index) => {
+                html += `
+                    <div class="product-item">
+                        <input type="text" value="${product.name}" onchange="updateProduct(${index}, 'name', this.value)" placeholder="Product Name">
+                        <input type="number" value="${product.price}" onchange="updateProduct(${index}, 'price', this.value)" placeholder="Price (₹)" step="0.01" min="0">
+                        <button class="remove-product-btn" onclick="removeProduct(${index})">🗑️ Remove</button>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            
+            container.innerHTML = html;
+        }
+
+        function addNewProduct() {
+            const name = document.getElementById('newProductName').value.trim();
+            const price = parseFloat(document.getElementById('newProductPrice').value);
+
+            if (!name) {
+                alert('❌ Please enter product name');
+                return;
+            }
+
+            if (!price || price <= 0) {
+                alert('❌ Please enter valid price');
+                return;
+            }
+
+            products.push({ name, price });
+            saveProducts();
+            displayProducts();
+            updateProductDropdown();
+
+            document.getElementById('newProductName').value = '';
+            document.getElementById('newProductPrice').value = '';
+            
+            alert('✅ Product added successfully!');
+        }
+
+        function updateProduct(index, field, value) {
+            if (field === 'price') {
+                value = parseFloat(value);
+                if (isNaN(value) || value < 0) {
+                    alert('❌ Invalid price');
+                    displayProducts();
+                    return;
+                }
+            }
+            products[index][field] = value;
+            saveProducts();
+            updateProductDropdown();
+        }
+
+        function removeProduct(index) {
+            if (confirm('Are you sure you want to remove this product?')) {
+                products.splice(index, 1);
+                saveProducts();
+                displayProducts();
+                updateProductDropdown();
+            }
+        }
+
+        function updateProductDropdown() {
+            const select = document.getElementById('productSelect');
+            select.innerHTML = '<option value="">-- Select Product --</option>';
+            
+            products.forEach((product, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${product.name} - ₹${product.price.toFixed(2)}`;
+                select.appendChild(option);
+            });
+        }
+
+        document.getElementById('productSelect').addEventListener('change', function() {
+            const index = this.value;
+            if (index !== '') {
+                document.getElementById('productPrice').value = products[index].price.toFixed(2);
+            } else {
+                document.getElementById('productPrice').value = '';
+            }
+        });
+
+        function addProduct() {
+            const selectIndex = document.getElementById('productSelect').value;
+            const qty = parseInt(document.getElementById('productQty').value);
+            const price = parseFloat(document.getElementById('productPrice').value);
+
+            if (selectIndex === '') {
+                alert('❌ Please select a product');
+                return;
+            }
+
+            if (!qty || qty < 1) {
+                alert('❌ Please enter valid quantity');
+                return;
+            }
+
+            const product = products[selectIndex];
+            const total = qty * price;
+
+            billItems.push({
+                name: product.name,
+                quantity: qty,
+                price: price,
+                total: total
+            });
+
+            updateBillTable();
+            
+            document.getElementById('productSelect').value = '';
+            document.getElementById('productQty').value = '1';
+            document.getElementById('productPrice').value = '';
+        }
+
+        function deleteItem(index) {
+            billItems.splice(index, 1);
+            updateBillTable();
+        }
+
+        function updateBillTable() {
+            const container = document.getElementById('billTableContainer');
+
+            if (billItems.length === 0) {
+                container.innerHTML = '<div class="empty-message">No items added yet. Add products above to start billing.</div>';
+                return;
+            }
+
+            let grandTotal = 0;
+            let tableHTML = `
+                <table class="bill-table">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Product Name</th>
+                            <th>Quantity</th>
+                            <th>Price (₹)</th>
+                            <th>Total (₹)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+
+            billItems.forEach((item, index) => {
+                grandTotal += item.total;
+                tableHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>₹${item.price.toFixed(2)}</td>
+                        <td>₹${item.total.toFixed(2)}</td>
+                        <td><button class="delete-btn" onclick="deleteItem(${index})">🗑️</button></td>
+                    </tr>
+                `;
+            });
+
+            tableHTML += `
+                    </tbody>
+                </table>
+                <div class="totals">
+                    <div class="total-row grand-total">
+                        <span>Grand Total:</span>
+                        <span>₹${grandTotal.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = tableHTML;
+        }
+
+        function preparePrintBill() {
+            if (billItems.length === 0) {
+                alert('❌ Please add at least one product to the bill');
+                return false;
+            }
+
+            const customerName = document.getElementById('customerName').value || 'Walk-in Customer';
+            const customerPhone = document.getElementById('customerPhone').value || '-';
+            const customerAddress = document.getElementById('customerAddress').value || '-';
+            const billNo = document.getElementById('billNumber').value;
+            const billDate = document.getElementById('billDate').value;
+            const billTime = document.getElementById('billTime').value;
+
+            document.getElementById('printShopName').textContent = shopSettings.name;
+            
+            let shopDetails = '';
+            if (shopSettings.address) shopDetails += shopSettings.address + ' | ';
+            if (shopSettings.phone) shopDetails += '📞 ' + shopSettings.phone + ' | ';
+            if (shopSettings.email) shopDetails += '📧 ' + shopSettings.email;
+            document.getElementById('printShopDetails').textContent = shopDetails;
+
+            document.getElementById('printCustomerName').textContent = customerName;
+            document.getElementById('printCustomerPhone').textContent = customerPhone;
+            document.getElementById('printCustomerAddress').textContent = customerAddress;
+            document.getElementById('printBillNo').textContent = billNo;
+            document.getElementById('printDate').textContent = billDate;
+            document.getElementById('printTime').textContent = billTime;
+
+            let grandTotal = 0;
+            let tableBody = '';
+
+            billItems.forEach((item, index) => {
+                grandTotal += item.total;
+                tableBody += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${item.name}</td>
+                        <td>${item.quantity}</td>
+                        <td>₹${item.price.toFixed(2)}</td>
+                        <td>₹${item.total.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('printTableBody').innerHTML = tableBody;
+
+            document.getElementById('printTotals').innerHTML = `
+                <div class="total-row grand-total">
+                    <span>Grand Total:</span>
+                    <span>₹${grandTotal.toFixed(2)}</span>
+                </div>
+            `;
+
+            return true;
+        }
+
+        function printBill() {
+            if (!preparePrintBill()) return;
+            window.print();
+        }
+
+        function sendWhatsApp() {
+            if (!preparePrintBill()) return;
+
+            const customerPhone = document.getElementById('customerPhone').value;
+            if (!customerPhone) {
+                alert('❌ Please enter customer phone number');
+                return;
+            }
+
+            const customerName = document.getElementById('customerName').value || 'Customer';
+            const billNo = document.getElementById('billNumber').value;
+            const billDate = document.getElementById('billDate').value;
+
+            let message = `*${shopSettings.name}*\n`;
+            message += `━━━━━━━━━━━━━━━━\n`;
+            message += `*Bill No:* ${billNo}\n`;
+            message += `*Date:* ${billDate}\n`;
+            message += `*Customer:* ${customerName}\n\n`;
+            message += `*ITEMS:*\n`;
+            message += `━━━━━━━━━━━━━━━━\n`;
+
+            let grandTotal = 0;
+            billItems.forEach((item, index) => {
+                grandTotal += item.total;
+                message += `${index + 1}. ${item.name}\n`;
+                message += `   ${item.quantity} × ₹${item.price.toFixed(2)} = ₹${item.total.toFixed(2)}\n\n`;
+            });
+
+            message += `━━━━━━━━━━━━━━━━\n`;
+            message += `*GRAND TOTAL: ₹${grandTotal.toFixed(2)}*\n\n`;
+            message += `Thank you for shopping with us! 🙏\n`;
+            message += `Visit again! 👗`;
+
+            const phoneNumber = customerPhone.replace(/[^0-9]/g, '');
+            const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            
+            window.open(whatsappURL, '_blank');
+        }
+
+        function saveBill() {
+            if (billItems.length === 0) {
+                alert('❌ Please add at least one product to save the bill');
+                return;
+            }
+
+            const billData = {
+                shopName: shopSettings.name,
+                billNumber: document.getElementById('billNumber').value,
+                date: document.getElementById('billDate').value,
+                time: document.getElementById('billTime').value,
+                customer: {
+                    name: document.getElementById('customerName').value,
+                    phone: document.getElementById('customerPhone').value,
+                    address: document.getElementById('customerAddress').value
+                },
+                items: billItems
+            };
+
+            const dataStr = JSON.stringify(billData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Bill_${billData.billNumber}.json`;
+            link.click();
+            
+            alert('✅ Bill saved successfully!');
+        }
+
+        function clearAll() {
+            if (billItems.length > 0) {
+                if (!confirm('Are you sure you want to clear all items and start a new bill?')) {
+                    return;
+                }
+            }
+
+            billItems = [];
+            updateBillTable();
+            
+            document.getElementById('customerName').value = '';
+            document.getElementById('customerPhone').value = '';
+            document.getElementById('customerAddress').value = '';
+            updateDateTime();
+            
+            alert('✅ Ready for new bill!');
+        }
+
+        // PWA Installation
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('service-worker.js')
+                    .then(reg => console.log('Service Worker registered'))
+                    .catch(err => console.log('Service Worker registration failed'));
+            });
+        }
+
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallButton();
+        });
+
+        function showInstallButton() {
+            const installDiv = document.createElement('div');
+            installDiv.style.cssText = 'position:fixed;bottom:20px;right:20px;background:#28a745;color:white;padding:15px 25px;border-radius:50px;cursor:pointer;box-shadow:0 4px 15px rgba(0,0,0,0.3);z-index:9999;font-weight:bold;';
+            installDiv.innerHTML = '📱 Install App';
+            installDiv.onclick = installApp;
+            document.body.appendChild(installDiv);
+        }
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('App installed');
+                    }
+                    deferredPrompt = null;
+                });
+            }
+        }
+    </script>
+</body>
+</html>
